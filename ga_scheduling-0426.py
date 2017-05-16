@@ -112,29 +112,15 @@ with open('servers', 'rb') as csvfile:
 #Generate work load
 WORKLOAD_HI = {
     'CPU_LOW': 20,
-    'CPU_MID': 40,
-    'CPU_HI': 40,
+    'CPU_MID': 30,
+    'CPU_HI': 50,
     'NUMA': 30, # non NUMA :(
-    'PINNING': 1, # non Pin :(
+    'PINNING': 30, # non Pin :(
     'AFFINITY': 20,
     'ANTIAFF' : 20
 }
-WORKLOAD_MID = {
-    'CPU_LOW': 30,
-    'CPU_MID': 50,
-    'CPU_HI': 20,
-    'NUMA': 30, # non NUMA :(
-    'PINNING': 1, # non Pin :(
-    'AFFINITY': 10,
-    'ANTIAFF' : 20
-}
-
-
-
-WL_NUM  = 300 #total cpu cores
+WL_NUM  = 240 #total cpu cores
 wls = []
-wls_numa = []
-
 def createWorkLoad():
     wl_low = []
     wl_mid = []
@@ -144,13 +130,12 @@ def createWorkLoad():
     wl_affinity = []
     wl_antiaff  = []
 
-    wl_profile = WORKLOAD_MID
+    wl_profile = WORKLOAD_HI
     
     cores = 0
     wl_id = 0
     while cores < WL_NUM:
         wl = {}
-        wl['fid'] = []
         rq_cpu = random.randint(1, 100)
         rq_numa = random.randint(1, 100)
         rq_pinning = random.randint(1, 100)
@@ -159,160 +144,115 @@ def createWorkLoad():
         if (rq_cpu < wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
-            wl['fid'].append( flavors_low[random.randint(0, len(flavors_low)-1)])
+            wl['fid'] = flavors_low[random.randint(0, len(flavors_low)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu < wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
-            wl['fid'].append( flavors_low_numa[random.randint(0, len(flavors_low_numa)-1)])
-            wl['fid'].append( flavors_low_numa[random.randint(0, len(flavors_low_numa)-1)])
+            wl['fid'] = flavors_low_numa[random.randint(0, len(flavors_low_numa)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu < wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_low_pin[random.randint(0, len(flavors_low_pin)-1)])
+            wl['fid'] = flavors_low_pin[random.randint(0, len(flavors_low_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu < wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_low_numa_pin[random.randint(
-                             0, len(flavors_low_numa_pin)-1)])
-            wl['fid'].append(flavors_low_numa_pin[random.randint(
-                             0, len(flavors_low_numa_pin)-1)])
+            wl['fid'] = flavors_low_numa_pin[random.randint(0, len(flavors_low_numa_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu >= wl_profile['CPU_LOW'] and
             rq_cpu < wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
-            wl['fid'].append(flavors_mid[random.randint(0, len(flavors_mid)-1)])
+            wl['fid'] = flavors_mid[random.randint(0, len(flavors_mid)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu >= wl_profile['CPU_LOW'] and
             rq_cpu < wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
-            wl['fid'].append(flavors_mid_numa[random.randint(0, len(flavors_mid_numa)-1)])
-            wl['fid'].append(flavors_mid_numa[random.randint(0, len(flavors_mid_numa)-1)])
+            wl['fid'] = flavors_mid_numa[random.randint(0, len(flavors_mid_numa)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu >= wl_profile['CPU_LOW'] and
             rq_cpu < wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_mid_pin[random.randint(0, len(flavors_mid_pin)-1)])
+            wl['fid'] = flavors_mid_pin[random.randint(0, len(flavors_mid_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (rq_cpu >= wl_profile['CPU_LOW'] and
             rq_cpu < wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_mid_numa_pin[random.randint(
-                             0, len(flavors_mid_numa_pin)-1)])
-            
-            wl['fid'].append(flavors_mid_numa_pin[random.randint(
-                             0, len(flavors_mid_numa_pin)-1)])
+            wl['fid'] = flavors_mid_numa_pin[random.randint(0, len(flavors_mid_numa_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (
             rq_cpu >= wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
-            wl['fid'].append(flavors_hi[random.randint(0, len(flavors_hi)-1)])
+            wl['fid'] = flavors_hi[random.randint(0, len(flavors_hi)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (
             rq_cpu >= wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning < wl_profile['PINNING']):
+            wl['fid'] = flavors_hi_numa[random.randint(0, len(flavors_hi_numa)-1)]
             wl["Affinity"] = []
-            wl['fid'].append(flavors_hi_numa[random.randint(0, len(flavors_hi_numa)-1)])
-            wl['fid'].append(flavors_hi_numa[random.randint(0, len(flavors_hi_numa)-1)])
+            wl['fid'] = flavors_hi_numa[random.randint(0, len(flavors_hi_numa)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (
             rq_cpu >= wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa < wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_hi_pin[random.randint(0, len(flavors_hi_pin)-1)])
+            wl['fid'] = flavors_hi_pin[random.randint(0, len(flavors_hi_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         elif (
             rq_cpu >= wl_profile['CPU_MID'] +  wl_profile['CPU_LOW'] and
             rq_numa >= wl_profile['NUMA'] and
             rq_pinning >= wl_profile['PINNING']):
-            wl['fid'].append(flavors_hi_numa_pin[random.randint(
-                             0, len(flavors_hi_numa_pin)-1)])
-            wl['fid'].append(flavors_hi_numa_pin[random.randint(
-                             0, len(flavors_hi_numa_pin)-1)])
+            wl['fid'] = flavors_hi_numa_pin[random.randint(0, len(flavors_hi_numa_pin)-1)]
             wl["Affinity"] = []
             wl["antiAff"] = []
         wl_id += 1
         wl['id'] = wl_id
         wls.append(wl)
-        cores += [x['cpu'] for x in flavors if x['id']==wl['fid'][0]][0]
-        if len(wl['fid']) > 1:
-            cores += [x['cpu'] for x in flavors if x['id']==wl['fid'][1]][0]
+        cores += [x['cpu'] for x in flavors if x['id']==wl['fid']][0]
     return cores
 
 
-createWorkLoad()
+#createWorkLoad()
 import json
 def saveWorkload():
     with open('data.txt', 'w') as outfile:
         json.dump(wls, outfile)
 def sortWorkload():
-    return sorted(wls, key=lambda k: sum(k['fid']))
+    return sorted(wls, key=lambda k: k['fid'])
 def loadWorkload():
     with open('data.txt') as json_data:
         return json.load(json_data)
-def printWorkload(wls=wls):
+def printWorkload():
     cores = 0
     ram = 0
     for wl in wls:
-        print wl
-        for i in range(0, len(wl['fid'])):
-            c,r = [(x['cpu'], x['ram']) for x in flavors if x['id']==wl['fid'][i]][0]
-            ram += r
-            cores += c
+        c,r = [(x['cpu'], x['ram']) for x in flavors if x['id']==wl['fid']][0]
+        ram += r
+        cores += c
     print 'workload: ', 'ram:', ram, ' cores:', cores  
-from itertools import izip
-def workload2WL_numa():
-    wls_numa = []
-    iterwl = iter(wls)
-    nwl = izip(iterwl, iterwl)
-    for i,j in nwl:
-        wl_numa = []
-        ci, ri = [(x['cpu'], x['ram']) for x in flavors if x['id']==i['fid']][0]
-        cj, rj = [(y['cpu'], y['ram']) for y in flavors if y['id']==j['fid']][0]
-        wl_numa.append({'cpu':ci,'ram':ri})
-        wl_numa.append({'cpu':cj,'ram':rj})
 
-        wls_numa.append(wl_numa)
-    print wls_numa
-    return wls_numa
-
-
-def printWorkLoad_numa():
-    cores1,cores2 = 0,0
-    ram1,ram2 = 0,0
-    for wl in wls_numa:
-        print wl
-        n1,n2 = wl[0],wl[1]
-        cores1 += n1['cpu']
-        cores2 += n2['cpu']
-        ram1 += n1['ram']
-        ram2 += n2['ram']
-    print ('workload_numa: ', 'ram1:', ram1, ' cores1:',
-           cores1, 'ram2:', ram2, ' cores2:', cores2)
-#wls = saveWorkload()    
 wls = loadWorkload()
 wls = sortWorkload()
 print wls
-printWorkload(wls)
+printWorkload()
 
 ### update resource providors ####
 rps = []
@@ -351,43 +291,42 @@ rps_dedicated, rps_shared = rp_init()
 
 def rp_update(rp, numa, cores, ram):
     placement = {}
-    rp['ram'] -= sum(ram)
+    rp['ram'] -= ram
     placement['svr_id'] = rp['id']
-    placement['ram'] = sum(ram)
+    placement['ram'] = ram
     new_numa_node = []
     pnuma = [] #init with the existing deployment
     pnuma.extend(rp['cpu'])
         
     if numa:
         done = False
-        for ni in range(0, len(rp['cpu'])):
-            if (rp['cpu'][ni] < cores[ni] or done):
-                print 'error state:', rp['cpu'][ni], cores[ni] 
-                #new_numa_node.append(nn)
-                break
+        for nn in rp['cpu']:
+            if (nn < cores or done):
+                new_numa_node.append(nn)
+                continue
             else:
-                rp['cpu'][ni] -= cores[ni]
-                new_numa_node.append(cores[ni])
-                #done = True
+                nn -= cores
+                new_numa_node.append(nn)
+                done = True
     else:
-        r = cores[0] - cores[0]/len(rp['cpu'])*len(rp['cpu'])
+        r = cores - cores/len(rp['cpu'])*len(rp['cpu'])
         for nn in rp['cpu']:
             if r > 0:
-                if nn >= cores[0]/len(rp['cpu'])+1:
-                    nn -= cores[0]/len(rp['cpu'])+1
+                if nn >= cores/len(rp['cpu'])+1:
+                    nn -= cores/len(rp['cpu'])+1
                     r -= 1
                 else:
-                   nn -= cores[0]/len(rp['cpu'])
+                   nn -= cores/len(rp['cpu'])
             else:
-                nn -= cores[0]/len(rp['cpu'])
+                nn -= cores/len(rp['cpu'])
             new_numa_node.append(nn)
     del rp['cpu'][:]
     rp['cpu'].extend(new_numa_node)
-    rp['av_cpu'] -= cores[0]
+    rp['av_cpu'] -= cores
     for i in range(0,len(rp['cpu'])):
         pnuma[i] -= rp['cpu'][i]
-    placement['fid']=[]
-    placement['fid'].extend(pnuma)
+    placement['numa']=[]
+    placement['numa'].extend(pnuma)
     return placement
 
 # Allocate resource according t the placementPlan
@@ -399,87 +338,75 @@ def rp_allocate_ga_planed(wls, placementPlan):
     unallocatedCpus = 0
     allocatedRam = 0
     unallocatedRam = 0
-    unallocated = []
+
 
     '''init resource allocation '''
     rps_dedicated, rps_shared = rp_init()
     for i in range(0, len(wls)):
-        cpu = []
-        ram = []
+        cpu = 0
+        ram = 0
         numa = False
         pin = False
         ''' find the workload'''
         for f in flavors:
-            for ni in range(0,len(wls[i]['fid'])):
-                if f['id']==wls[i]['fid'][ni]:
-                    cpu.append(f['cpu'])
-                    ram.append(f['ram'])
-                    pin = f['pin'] #not used, not accurate
-                    if ni > 0:
-                        numa = True
-                    else:
-                        numa = False
-
+            if f['id']==wls[i]['fid']:
+                cpu = f['cpu']
+                ram = f['ram']
+                pin = f['pin']
+                numa = f['numa']
+                break;
         fit = False
         ''' find the server '''
         rp = [s for s in rps_dedicated if s['id'] == placementPlan[i]][0]
         #print rp
         #TODO make sure server id is for all servers not only dedicated
-        if (rp['ram'] < sum(ram) or
-            rp['av_cpu'] < sum(cpu)):
+        if (rp['ram'] < ram or
+            rp['av_cpu'] < cpu):
                 fit = False
         elif numa:
-            fit = True
-            for ni in range(0, len(rp['cpu'])):
-                if rp['cpu'][ni] < cpu[ni]:
+            for nn in rp['cpu']:
+                if nn < cpu:
                     fit = False
+                else:
+                    fit = True
         else:
             fit = True
             for nn in rp['cpu']:
-                if nn < cpu[0] / len(rp['cpu']):
+                if nn < cpu / len(rp['cpu']):
                     fit = False
 
         if not fit:
-            unallocatedCpus += sum(cpu)
-            unallocatedRam += sum(ram)
-            unallocated.append(wls[i])
+            unallocatedCpus += cpu
+            unallocatedRam += ram
             continue
         else:
             placement = rp_update(rp, numa, cpu, ram)
-            allocatedCpus += sum(cpu)
-            allocatedRam += sum(ram)
+            allocatedCpus +=cpu
+            allocatedRam += ram
             placement['wl_id'] = wls[i]['id']
             ##return placement
-    return allocatedCpus,allocatedRam, unallocated
-
-
+    return allocatedCpus,allocatedRam
 
 # Allocate resource to a request
 # return placement if it is done successfully
 # return None otherwise
-def rp_allocate_sorted(wl, isHLF=True):
+def rp_allocate_sorted(wl):
     placement = None
-    cpu = []
-    ram = []
     #get cpu and ram from wl['fid'] and flavors
     for f in flavors:
-        for i in range(0,len(wl['fid'])):
-            if f['id']==wl['fid'][i]:
-                cpu.append(f['cpu'])
-                ram.append(f['ram'])
-                pin = f['pin'] #not used, not accurate
-                if i > 0:
-                    numa = True
-                else:
-                    numa = False
-    '''
+        if f['id']==wl['fid']:
+            cpu = f['cpu']
+            ram = f['ram']
+            pin = f['pin']
+            numa = f['numa']
+
     if pin:
         rppool = rps_dedicated
     else:
         rppool = rps_shared
-    '''
+
     """Sort the provider pool using available CPUs"""
-    n = sorted(rps_dedicated, key=itemgetter('av_cpu'), reverse=isHLF)
+    n = sorted(rppool, key=itemgetter('av_cpu'))
 
     """walk through the sorted list, find the first available:
     1. if NUMA, then allocate all the most avialble numa node
@@ -489,29 +416,31 @@ def rp_allocate_sorted(wl, isHLF=True):
     unallocatedCpus = 0
     for rp in n:
         fit = False
-        if (rp['ram'] < sum(ram) or
-            rp['av_cpu'] < sum(cpu)):
+        if (rp['ram'] < ram or
+            rp['av_cpu'] < cpu):
             continue
         elif numa:
-            fit = True
-            for ni in range(0,len(rp['cpu'])):
-                if rp['cpu'][ni] < cpu[ni]:
-                    fit = False
-        else: # non-numa case place the load evenly
+            for nn in rp['cpu']:
+                if nn < cpu:
+                    continue
+                else:
+                    fit = True
+        else:
             fit = True
             for nn in rp['cpu']:
-                if nn < cpu[0]/len(rp['cpu']):
+                if nn < cpu/len(rp['cpu']):
                     fit = False
                     continue
 
         if not fit:
-            unallocatedCpus +=sum( cpu)
+            unallocatedCpus += cpu
             continue
         else:
             placement = rp_update(rp, numa, cpu, ram)
             placement['wl_id'] = wl['id']
             break
 
+    print unallocatedCpus
     return placement
 
 
@@ -522,42 +451,24 @@ notDeployed=[]
 # Heaviest Loaded First
 def workloadPlace_HLF(): 
     for wl in wls:
-        p = rp_allocate_sorted(wl, isHLF=True)
+        p = rp_allocate_sorted(wl)
         if p == None:
             notDeployed.append(wl)
         else:
-            deploymentPlan.append(wl)
-
-# Least Loaded First
-def workloadPlace_LLF():
-    for wl in wls:
-        p = rp_allocate_sorted(wl, isHLF=False)
-        if p == None:
-            notDeployed.append(wl)
-        else:
-            deploymentPlan.append(wl)
-
-
-
+            deploymentPlan.append(p)
+'''
 workloadPlace_HLF()
 print '----- deployed ------'
 print deploymentPlan
 print '----- not deployed ------'
 print notDeployed
-printWorkload(deploymentPlan)
-if len(notDeployed) > 1:
-    printWorkload(notDeployed)
-
-
-
-
-
+'''
 from deap import base
 from deap import creator
 from deap import tools, algorithms
 import numpy
 
-creator.create("FitnessMax", base.Fitness, weights=(10.0,1.0,0.1))
+creator.create("FitnessMax", base.Fitness, weights=(1.0,1.0,10.0))
 creator.create("Individual", list, fitness=creator.FitnessMax)
 rps_dedicated, rps_shared = rp_init()
 toolbox = base.Toolbox()
@@ -569,25 +480,23 @@ toolbox.register("individual", tools.initRepeat, creator.Individual,
                  toolbox.attr_srv, n=N_CYCLES)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-def evalPlacement(individual, prt=False):
+def evalPlacement(individual):
     res_on_servers = []
     for i in range(0, len(rps_dedicated)):
         res_on_servers.append(0)
     req = 0
     for s in individual:
        flv = wls[req]['fid']
-       for fi in range(0, len(flv)): 
-           res_on_servers[int(s-SRV_MIN)] += int(flavors[flv[fi]]['cpu'])
+       res_on_servers[int(s-SRV_MIN)] += int(flavors[flv]['cpu'])
        req += 1
 
     deviation = numpy.std(numpy.array([res_on_servers]))
-    fit,ram,notfit = rp_allocate_ga_planed(wls, individual)
-    if prt:
-        print notfit 
+    fit,ram = rp_allocate_ga_planed(wls, individual)
+    
     return (fit,ram,deviation)
 
 def crossPlacement(ind1, ind2):
-    EXCHANGE_RATE = 20
+    EXCHANGE_RATE = 30
     for i in range(0, len(ind1)-1):
         r_nochange = random.randint(1, 100)
         if ind1[i] == ind2[i]:
@@ -598,7 +507,7 @@ def crossPlacement(ind1, ind2):
     return ind1,ind2
 
 def mutPlacement(ind):
-    MUTE_RATE = int(0.1*100)
+    MUTE_RATE = int(0.05*100)
     for i in range(0, len(ind)):
         m = random.randint(1, 100)
         if m < MUTE_RATE:
@@ -613,11 +522,11 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 def main():
     random.seed(64)
 
-    NGEN = 3000
-    MU = 500
+    NGEN = 6000
+    MU = 100
     LAMBDA = 100
-    CXPB = 0.2
-    MUTPB = 0.1
+    CXPB = 0.3
+    MUTPB = 0.2
     
     pop = toolbox.population(n=MU)
     hof = tools.ParetoFront()
@@ -630,15 +539,14 @@ def main():
     algorithms.eaMuPlusLambda(pop, toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
     
     return pop, stats, hof
-
-'''
+ 
 if __name__ == "__main__":
     p,s,h = main()
 
+
     #print s
     print h
-    for hh in h:
-        print '------------------'
-        print evalPlacement(h[0],prt=True)
-    printWorkload(wls)
-'''
+
+    print evalPlacement(h[0])
+    printWorkload()
+

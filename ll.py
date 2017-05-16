@@ -539,7 +539,7 @@ def workloadPlace_LLF():
 
 
 
-workloadPlace_HLF()
+workloadPlace_LLF()
 print '----- deployed ------'
 print deploymentPlan
 print '----- not deployed ------'

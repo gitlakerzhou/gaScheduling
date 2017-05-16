@@ -119,9 +119,48 @@ WORKLOAD_HI = {
     'AFFINITY': 20,
     'ANTIAFF' : 20
 }
-WORKLOAD_MID = {
+#Generate work load
+WORKLOAD_HI2 = {
+    'CPU_LOW': 10,
+    'CPU_MID': 30,
+    'CPU_HI': 60,
+    'NUMA': 30, # non NUMA :(
+    'PINNING': 1, # non Pin :(
+    'AFFINITY': 20,
+    'ANTIAFF' : 20
+}
+#Generate work load
+WORKLOAD_HI3 = {
+    'CPU_LOW': 25,
+    'CPU_MID': 25,
+    'CPU_HI': 50,
+    'NUMA': 30, # non NUMA :(
+    'PINNING': 1, # non Pin :(
+    'AFFINITY': 20,
+    'ANTIAFF' : 20
+}
+
+WORKLOAD_MID1 = {
     'CPU_LOW': 30,
     'CPU_MID': 50,
+    'CPU_HI': 20,
+    'NUMA': 30, # non NUMA :(
+    'PINNING': 1, # non Pin :(
+    'AFFINITY': 10,
+    'ANTIAFF' : 20
+}
+WORKLOAD_MID2 = {
+    'CPU_LOW': 20,
+    'CPU_MID': 60,
+    'CPU_HI': 20,
+    'NUMA': 30, # non NUMA :(
+    'PINNING': 1, # non Pin :(
+    'AFFINITY': 10,
+    'ANTIAFF' : 20
+}
+WORKLOAD_MID3 = {
+    'CPU_LOW': 10,
+    'CPU_MID': 70,
     'CPU_HI': 20,
     'NUMA': 30, # non NUMA :(
     'PINNING': 1, # non Pin :(
@@ -131,7 +170,7 @@ WORKLOAD_MID = {
 
 
 
-WL_NUM  = 300 #total cpu cores
+WL_NUM  = 360 #total cpu cores
 wls = []
 wls_numa = []
 
@@ -144,7 +183,7 @@ def createWorkLoad():
     wl_affinity = []
     wl_antiaff  = []
 
-    wl_profile = WORKLOAD_MID
+    wl_profile = WORKLOAD_MID3
     
     cores = 0
     wl_id = 0
@@ -308,337 +347,9 @@ def printWorkLoad_numa():
         ram2 += n2['ram']
     print ('workload_numa: ', 'ram1:', ram1, ' cores1:',
            cores1, 'ram2:', ram2, ' cores2:', cores2)
-#wls = saveWorkload()    
+wls = saveWorkload()    
 wls = loadWorkload()
 wls = sortWorkload()
 print wls
 printWorkload(wls)
 
-### update resource providors ####
-rps = []
-rps_dedicated = []
-rps_shared = []
-
-def rp_init():
-    rps = []
-    rps_dedicated = []
-    rps_shared = []
-    for s in servers:
-        rp = {}
-        rp['SharedCPU'] = (s['cfg'] == 'SHARED-CPU')
-        rp['id'] = s['id']
-        cpu = int(s['cores'])
-        rp['cpu'] = []
-        socket = int(s['sockets'])
-        for i in range(0, socket):
-            if rp['SharedCPU']:
-                rp['total_cpu'] = cpu*policy_shared_rate
-                rp['av_cpu'] = cpu*policy_shared_rate
-                rp['cpu'].append(cpu*policy_shared_rate/socket)
-            else:
-                rp['total_cpu'] = cpu
-                rp['av_cpu'] = cpu
-                rp['cpu'].append(cpu/socket)
-        rp['ram'] = int(s['ram'])
-        rps.append(rp)
-        if not rp['SharedCPU']:
-            rps_dedicated.append(rp)
-        else:
-            rps_shared.append(rp)
-    return rps_dedicated, rps_shared
-
-rps_dedicated, rps_shared = rp_init()
-
-def rp_update(rp, numa, cores, ram):
-    placement = {}
-    rp['ram'] -= sum(ram)
-    placement['svr_id'] = rp['id']
-    placement['ram'] = sum(ram)
-    new_numa_node = []
-    pnuma = [] #init with the existing deployment
-    pnuma.extend(rp['cpu'])
-        
-    if numa:
-        done = False
-        for ni in range(0, len(rp['cpu'])):
-            if (rp['cpu'][ni] < cores[ni] or done):
-                print 'error state:', rp['cpu'][ni], cores[ni] 
-                #new_numa_node.append(nn)
-                break
-            else:
-                rp['cpu'][ni] -= cores[ni]
-                new_numa_node.append(cores[ni])
-                #done = True
-    else:
-        r = cores[0] - cores[0]/len(rp['cpu'])*len(rp['cpu'])
-        for nn in rp['cpu']:
-            if r > 0:
-                if nn >= cores[0]/len(rp['cpu'])+1:
-                    nn -= cores[0]/len(rp['cpu'])+1
-                    r -= 1
-                else:
-                   nn -= cores[0]/len(rp['cpu'])
-            else:
-                nn -= cores[0]/len(rp['cpu'])
-            new_numa_node.append(nn)
-    del rp['cpu'][:]
-    rp['cpu'].extend(new_numa_node)
-    rp['av_cpu'] -= cores[0]
-    for i in range(0,len(rp['cpu'])):
-        pnuma[i] -= rp['cpu'][i]
-    placement['fid']=[]
-    placement['fid'].extend(pnuma)
-    return placement
-
-# Allocate resource according t the placementPlan
-# return placemnets if it is done successfully
-# return None otherwise
-def rp_allocate_ga_planed(wls, placementPlan):
-    placements = []
-    allocatedCpus = 0
-    unallocatedCpus = 0
-    allocatedRam = 0
-    unallocatedRam = 0
-    unallocated = []
-
-    '''init resource allocation '''
-    rps_dedicated, rps_shared = rp_init()
-    for i in range(0, len(wls)):
-        cpu = []
-        ram = []
-        numa = False
-        pin = False
-        ''' find the workload'''
-        for f in flavors:
-            for ni in range(0,len(wls[i]['fid'])):
-                if f['id']==wls[i]['fid'][ni]:
-                    cpu.append(f['cpu'])
-                    ram.append(f['ram'])
-                    pin = f['pin'] #not used, not accurate
-                    if ni > 0:
-                        numa = True
-                    else:
-                        numa = False
-
-        fit = False
-        ''' find the server '''
-        rp = [s for s in rps_dedicated if s['id'] == placementPlan[i]][0]
-        #print rp
-        #TODO make sure server id is for all servers not only dedicated
-        if (rp['ram'] < sum(ram) or
-            rp['av_cpu'] < sum(cpu)):
-                fit = False
-        elif numa:
-            fit = True
-            for ni in range(0, len(rp['cpu'])):
-                if rp['cpu'][ni] < cpu[ni]:
-                    fit = False
-        else:
-            fit = True
-            for nn in rp['cpu']:
-                if nn < cpu[0] / len(rp['cpu']):
-                    fit = False
-
-        if not fit:
-            unallocatedCpus += sum(cpu)
-            unallocatedRam += sum(ram)
-            unallocated.append(wls[i])
-            continue
-        else:
-            placement = rp_update(rp, numa, cpu, ram)
-            allocatedCpus += sum(cpu)
-            allocatedRam += sum(ram)
-            placement['wl_id'] = wls[i]['id']
-            ##return placement
-    return allocatedCpus,allocatedRam, unallocated
-
-
-
-# Allocate resource to a request
-# return placement if it is done successfully
-# return None otherwise
-def rp_allocate_sorted(wl, isHLF=True):
-    placement = None
-    cpu = []
-    ram = []
-    #get cpu and ram from wl['fid'] and flavors
-    for f in flavors:
-        for i in range(0,len(wl['fid'])):
-            if f['id']==wl['fid'][i]:
-                cpu.append(f['cpu'])
-                ram.append(f['ram'])
-                pin = f['pin'] #not used, not accurate
-                if i > 0:
-                    numa = True
-                else:
-                    numa = False
-    '''
-    if pin:
-        rppool = rps_dedicated
-    else:
-        rppool = rps_shared
-    '''
-    """Sort the provider pool using available CPUs"""
-    n = sorted(rps_dedicated, key=itemgetter('av_cpu'), reverse=isHLF)
-
-    """walk through the sorted list, find the first available:
-    1. if NUMA, then allocate all the most avialble numa node
-    2. if not NUMA, even out the request to all numa node
-    """
-    fit = False
-    unallocatedCpus = 0
-    for rp in n:
-        fit = False
-        if (rp['ram'] < sum(ram) or
-            rp['av_cpu'] < sum(cpu)):
-            continue
-        elif numa:
-            fit = True
-            for ni in range(0,len(rp['cpu'])):
-                if rp['cpu'][ni] < cpu[ni]:
-                    fit = False
-        else: # non-numa case place the load evenly
-            fit = True
-            for nn in rp['cpu']:
-                if nn < cpu[0]/len(rp['cpu']):
-                    fit = False
-                    continue
-
-        if not fit:
-            unallocatedCpus +=sum( cpu)
-            continue
-        else:
-            placement = rp_update(rp, numa, cpu, ram)
-            placement['wl_id'] = wl['id']
-            break
-
-    return placement
-
-
-
-
-deploymentPlan = []
-notDeployed=[]
-# Heaviest Loaded First
-def workloadPlace_HLF(): 
-    for wl in wls:
-        p = rp_allocate_sorted(wl, isHLF=True)
-        if p == None:
-            notDeployed.append(wl)
-        else:
-            deploymentPlan.append(wl)
-
-# Least Loaded First
-def workloadPlace_LLF():
-    for wl in wls:
-        p = rp_allocate_sorted(wl, isHLF=False)
-        if p == None:
-            notDeployed.append(wl)
-        else:
-            deploymentPlan.append(wl)
-
-
-
-workloadPlace_HLF()
-print '----- deployed ------'
-print deploymentPlan
-print '----- not deployed ------'
-print notDeployed
-printWorkload(deploymentPlan)
-if len(notDeployed) > 1:
-    printWorkload(notDeployed)
-
-
-
-
-
-from deap import base
-from deap import creator
-from deap import tools, algorithms
-import numpy
-
-creator.create("FitnessMax", base.Fitness, weights=(10.0,1.0,0.1))
-creator.create("Individual", list, fitness=creator.FitnessMax)
-rps_dedicated, rps_shared = rp_init()
-toolbox = base.Toolbox()
-seq_dedicated = [x['id'] for x in rps_dedicated]
-SRV_MIN, SRV_MAX = min(seq_dedicated), max(seq_dedicated)
-N_CYCLES = len(wls)
-toolbox.register("attr_srv", random.randint, SRV_MIN, SRV_MAX)
-toolbox.register("individual", tools.initRepeat, creator.Individual,
-                 toolbox.attr_srv, n=N_CYCLES)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-
-def evalPlacement(individual, prt=False):
-    res_on_servers = []
-    for i in range(0, len(rps_dedicated)):
-        res_on_servers.append(0)
-    req = 0
-    for s in individual:
-       flv = wls[req]['fid']
-       for fi in range(0, len(flv)): 
-           res_on_servers[int(s-SRV_MIN)] += int(flavors[flv[fi]]['cpu'])
-       req += 1
-
-    deviation = numpy.std(numpy.array([res_on_servers]))
-    fit,ram,notfit = rp_allocate_ga_planed(wls, individual)
-    if prt:
-        print notfit 
-    return (fit,ram,deviation)
-
-def crossPlacement(ind1, ind2):
-    EXCHANGE_RATE = 20
-    for i in range(0, len(ind1)-1):
-        r_nochange = random.randint(1, 100)
-        if ind1[i] == ind2[i]:
-            continue
-        else:
-            if r_nochange < EXCHANGE_RATE:
-                ind1[i],ind2[i] = ind2[i],ind1[i]
-    return ind1,ind2
-
-def mutPlacement(ind):
-    MUTE_RATE = int(0.1*100)
-    for i in range(0, len(ind)):
-        m = random.randint(1, 100)
-        if m < MUTE_RATE:
-            ind[i] = random.randint(SRV_MIN, SRV_MAX)
-    return ind,
-
-toolbox.register("evaluate", evalPlacement)
-toolbox.register("mate", crossPlacement)
-toolbox.register("mutate", mutPlacement)
-toolbox.register("select", tools.selTournament, tournsize=3)
-
-def main():
-    random.seed(64)
-
-    NGEN = 3000
-    MU = 500
-    LAMBDA = 100
-    CXPB = 0.2
-    MUTPB = 0.1
-    
-    pop = toolbox.population(n=MU)
-    hof = tools.ParetoFront()
-    stats = tools.Statistics(lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean, axis=0)
-    stats.register("std", numpy.std, axis=0)
-    stats.register("min", numpy.min, axis=0)
-    stats.register("max", numpy.max, axis=0)
-    
-    algorithms.eaMuPlusLambda(pop, toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
-    
-    return pop, stats, hof
-
-'''
-if __name__ == "__main__":
-    p,s,h = main()
-
-    #print s
-    print h
-    for hh in h:
-        print '------------------'
-        print evalPlacement(h[0],prt=True)
-    printWorkload(wls)
-'''

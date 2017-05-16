@@ -1,0 +1,60 @@
+[{u'Affinity': [], u'fid': [0, 2], u'antiAff': [], u'id': 10}, {u'Affinity': [], u'fid': [2, 0], u'antiAff': [], u'id': 12}, {u'Affinity': [], u'fid': [0, 4], u'antiAff': [], u'id': 16}, {u'Affinity': [], u'fid': [5], u'antiAff': [], u'id': 21}, {u'Affinity': [], u'fid': [10], u'antiAff': [], u'id': 20}, {u'Affinity': [], u'fid': [2, 8], u'antiAff': [], u'id': 26}, {u'Affinity': [], u'fid': [8, 4], u'antiAff': [], u'id': 1}, {u'Affinity': [], u'fid': [2, 10], u'antiAff': [], u'id': 6}, {u'Affinity': [], u'fid': [4, 10], u'antiAff': [], u'id': 14}, {u'Affinity': [], u'fid': [8, 10], u'antiAff': [], u'id': 23}, {u'Affinity': [], u'fid': [26], u'antiAff': [], u'id': 8}, {u'Affinity': [], u'fid': [35], u'antiAff': [], u'id': 24}, {u'Affinity': [], u'fid': [41], u'antiAff': [], u'id': 15}, {u'Affinity': [], u'fid': [41, 33], u'antiAff': [], u'id': 2}, {u'Affinity': [], u'fid': [62, 24], u'antiAff': [], u'id': 5}, {u'Affinity': [], u'fid': [88], u'antiAff': [], u'id': 17}, {u'Affinity': [], u'fid': [37, 53], u'antiAff': [], u'id': 7}, {u'Affinity': [], u'fid': [94], u'antiAff': [], u'id': 18}, {u'Affinity': [], u'fid': [97], u'antiAff': [], u'id': 13}, {u'Affinity': [], u'fid': [98], u'antiAff': [], u'id': 11}, {u'Affinity': [], u'fid': [49, 66], u'antiAff': [], u'id': 25}, {u'Affinity': [], u'fid': [66, 53], u'antiAff': [], u'id': 19}, {u'Affinity': [], u'fid': [94, 78], u'antiAff': [], u'id': 22}, {u'Affinity': [], u'fid': [78, 98], u'antiAff': [], u'id': 4}, {u'Affinity': [], u'fid': [88, 88], u'antiAff': [], u'id': 9}, {u'Affinity': [], u'fid': [94, 98], u'antiAff': [], u'id': 3}]
+{u'Affinity': [], u'fid': [0, 2], u'antiAff': [], u'id': 10}
+{u'Affinity': [], u'fid': [2, 0], u'antiAff': [], u'id': 12}
+{u'Affinity': [], u'fid': [0, 4], u'antiAff': [], u'id': 16}
+{u'Affinity': [], u'fid': [5], u'antiAff': [], u'id': 21}
+{u'Affinity': [], u'fid': [10], u'antiAff': [], u'id': 20}
+{u'Affinity': [], u'fid': [2, 8], u'antiAff': [], u'id': 26}
+{u'Affinity': [], u'fid': [8, 4], u'antiAff': [], u'id': 1}
+{u'Affinity': [], u'fid': [2, 10], u'antiAff': [], u'id': 6}
+{u'Affinity': [], u'fid': [4, 10], u'antiAff': [], u'id': 14}
+{u'Affinity': [], u'fid': [8, 10], u'antiAff': [], u'id': 23}
+{u'Affinity': [], u'fid': [26], u'antiAff': [], u'id': 8}
+{u'Affinity': [], u'fid': [35], u'antiAff': [], u'id': 24}
+{u'Affinity': [], u'fid': [41], u'antiAff': [], u'id': 15}
+{u'Affinity': [], u'fid': [41, 33], u'antiAff': [], u'id': 2}
+{u'Affinity': [], u'fid': [62, 24], u'antiAff': [], u'id': 5}
+{u'Affinity': [], u'fid': [88], u'antiAff': [], u'id': 17}
+{u'Affinity': [], u'fid': [37, 53], u'antiAff': [], u'id': 7}
+{u'Affinity': [], u'fid': [94], u'antiAff': [], u'id': 18}
+{u'Affinity': [], u'fid': [97], u'antiAff': [], u'id': 13}
+{u'Affinity': [], u'fid': [98], u'antiAff': [], u'id': 11}
+{u'Affinity': [], u'fid': [49, 66], u'antiAff': [], u'id': 25}
+{u'Affinity': [], u'fid': [66, 53], u'antiAff': [], u'id': 19}
+{u'Affinity': [], u'fid': [94, 78], u'antiAff': [], u'id': 22}
+{u'Affinity': [], u'fid': [78, 98], u'antiAff': [], u'id': 4}
+{u'Affinity': [], u'fid': [88, 88], u'antiAff': [], u'id': 9}
+{u'Affinity': [], u'fid': [94, 98], u'antiAff': [], u'id': 3}
+workload:  ram: 3120  cores: 337
+----- deployed ------
+[{u'Affinity': [], u'fid': [0, 2], u'antiAff': [], u'id': 10}, {u'Affinity': [], u'fid': [2, 0], u'antiAff': [], u'id': 12}, {u'Affinity': [], u'fid': [0, 4], u'antiAff': [], u'id': 16}, {u'Affinity': [], u'fid': [5], u'antiAff': [], u'id': 21}, {u'Affinity': [], u'fid': [10], u'antiAff': [], u'id': 20}, {u'Affinity': [], u'fid': [2, 8], u'antiAff': [], u'id': 26}, {u'Affinity': [], u'fid': [8, 4], u'antiAff': [], u'id': 1}, {u'Affinity': [], u'fid': [2, 10], u'antiAff': [], u'id': 6}, {u'Affinity': [], u'fid': [4, 10], u'antiAff': [], u'id': 14}, {u'Affinity': [], u'fid': [8, 10], u'antiAff': [], u'id': 23}, {u'Affinity': [], u'fid': [26], u'antiAff': [], u'id': 8}, {u'Affinity': [], u'fid': [35], u'antiAff': [], u'id': 24}, {u'Affinity': [], u'fid': [41], u'antiAff': [], u'id': 15}, {u'Affinity': [], u'fid': [62, 24], u'antiAff': [], u'id': 5}, {u'Affinity': [], u'fid': [88], u'antiAff': [], u'id': 17}, {u'Affinity': [], u'fid': [94], u'antiAff': [], u'id': 18}, {u'Affinity': [], u'fid': [97], u'antiAff': [], u'id': 13}, {u'Affinity': [], u'fid': [98], u'antiAff': [], u'id': 11}, {u'Affinity': [], u'fid': [49, 66], u'antiAff': [], u'id': 25}, {u'Affinity': [], u'fid': [66, 53], u'antiAff': [], u'id': 19}, {u'Affinity': [], u'fid': [94, 78], u'antiAff': [], u'id': 22}, {u'Affinity': [], u'fid': [78, 98], u'antiAff': [], u'id': 4}, {u'Affinity': [], u'fid': [88, 88], u'antiAff': [], u'id': 9}, {u'Affinity': [], u'fid': [94, 98], u'antiAff': [], u'id': 3}]
+----- not deployed ------
+[{u'Affinity': [], u'fid': [41, 33], u'antiAff': [], u'id': 2}, {u'Affinity': [], u'fid': [37, 53], u'antiAff': [], u'id': 7}]
+{u'Affinity': [], u'fid': [0, 2], u'antiAff': [], u'id': 10}
+{u'Affinity': [], u'fid': [2, 0], u'antiAff': [], u'id': 12}
+{u'Affinity': [], u'fid': [0, 4], u'antiAff': [], u'id': 16}
+{u'Affinity': [], u'fid': [5], u'antiAff': [], u'id': 21}
+{u'Affinity': [], u'fid': [10], u'antiAff': [], u'id': 20}
+{u'Affinity': [], u'fid': [2, 8], u'antiAff': [], u'id': 26}
+{u'Affinity': [], u'fid': [8, 4], u'antiAff': [], u'id': 1}
+{u'Affinity': [], u'fid': [2, 10], u'antiAff': [], u'id': 6}
+{u'Affinity': [], u'fid': [4, 10], u'antiAff': [], u'id': 14}
+{u'Affinity': [], u'fid': [8, 10], u'antiAff': [], u'id': 23}
+{u'Affinity': [], u'fid': [26], u'antiAff': [], u'id': 8}
+{u'Affinity': [], u'fid': [35], u'antiAff': [], u'id': 24}
+{u'Affinity': [], u'fid': [41], u'antiAff': [], u'id': 15}
+{u'Affinity': [], u'fid': [62, 24], u'antiAff': [], u'id': 5}
+{u'Affinity': [], u'fid': [88], u'antiAff': [], u'id': 17}
+{u'Affinity': [], u'fid': [94], u'antiAff': [], u'id': 18}
+{u'Affinity': [], u'fid': [97], u'antiAff': [], u'id': 13}
+{u'Affinity': [], u'fid': [98], u'antiAff': [], u'id': 11}
+{u'Affinity': [], u'fid': [49, 66], u'antiAff': [], u'id': 25}
+{u'Affinity': [], u'fid': [66, 53], u'antiAff': [], u'id': 19}
+{u'Affinity': [], u'fid': [94, 78], u'antiAff': [], u'id': 22}
+{u'Affinity': [], u'fid': [78, 98], u'antiAff': [], u'id': 4}
+{u'Affinity': [], u'fid': [88, 88], u'antiAff': [], u'id': 9}
+{u'Affinity': [], u'fid': [94, 98], u'antiAff': [], u'id': 3}
+workload:  ram: 2820  cores: 313
+{u'Affinity': [], u'fid': [41, 33], u'antiAff': [], u'id': 2}
+{u'Affinity': [], u'fid': [37, 53], u'antiAff': [], u'id': 7}
+workload:  ram: 300  cores: 24

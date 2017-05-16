@@ -538,7 +538,7 @@ def workloadPlace_LLF():
             deploymentPlan.append(wl)
 
 
-
+'''
 workloadPlace_HLF()
 print '----- deployed ------'
 print deploymentPlan
@@ -547,7 +547,7 @@ print notDeployed
 printWorkload(deploymentPlan)
 if len(notDeployed) > 1:
     printWorkload(notDeployed)
-
+'''
 
 
 
@@ -557,7 +557,7 @@ from deap import creator
 from deap import tools, algorithms
 import numpy
 
-creator.create("FitnessMax", base.Fitness, weights=(10.0,1.0,0.1))
+creator.create("FitnessMax", base.Fitness, weights=(10.0,1.0,-1))
 creator.create("Individual", list, fitness=creator.FitnessMax)
 rps_dedicated, rps_shared = rp_init()
 toolbox = base.Toolbox()
@@ -613,8 +613,8 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 def main():
     random.seed(64)
 
-    NGEN = 3000
-    MU = 500
+    NGEN = 6000
+    MU = 1500
     LAMBDA = 100
     CXPB = 0.2
     MUTPB = 0.1
@@ -631,7 +631,6 @@ def main():
     
     return pop, stats, hof
 
-'''
 if __name__ == "__main__":
     p,s,h = main()
 
@@ -641,4 +640,3 @@ if __name__ == "__main__":
         print '------------------'
         print evalPlacement(h[0],prt=True)
     printWorkload(wls)
-'''
